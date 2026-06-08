@@ -52,7 +52,7 @@ async def ingest_catalog():
 
     # 3. Instantiate AI provider
     provider = OpenRouterAIProvider()
-    has_api_key = bool(provider.api_key and "MY_GEMINI_API_KEY" not in provider.api_key and "YOUR_" not in provider.api_key)
+    has_api_key = bool(provider.api_key and provider.api_key.strip() not in ("", "sua_chave_aqui"))
 
     if not has_api_key:
         logger.warning(

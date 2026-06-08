@@ -349,7 +349,7 @@ export default function App() {
                 Consolidando Curadoria Inteligente...
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mt-1">
-                Cruzando vetores de publicação com o modelo de linguagem Gemini 3.5.
+                Cruzando busca híbrida (FTS + pgvector) com o modelo GPT-4o-mini via OpenRouter.
               </p>
               
               <div className="w-full max-w-md mt-8 space-y-3 pt-6 border-t border-slate-100 text-left">
@@ -437,7 +437,7 @@ export default function App() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-slate-400">ENDPOINT API: /api/ask</span>
+                    <span className="text-[10px] font-mono text-slate-400">API: /api/ask · /api/ask/stream</span>
                   </div>
                 </div>
 

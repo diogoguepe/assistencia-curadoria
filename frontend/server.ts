@@ -1,29 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI, Type } from "@google/genai";
-import { CATALOG } from "./src/data/books.js"; // Use JS extension or let bundler handle it
-import { Book, AnswerResponse, PipelineStep } from "./src/types.js";
-
-// Helper to get lazy-initialized GenAI client
-let genAIClient: GoogleGenAI | null = null;
-function getGenAI(): GoogleGenAI {
-  if (!genAIClient) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) {
-      throw new Error("GEMINI_API_KEY environment variable is not defined");
-    }
-    genAIClient = new GoogleGenAI({
-      apiKey: key,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        }
-      }
-    });
-  }
-  return genAIClient;
-}
+import { CATALOG } from "./src/data/books.js";
 
 async function startServer() {
   const app = express();
@@ -42,7 +20,7 @@ async function startServer() {
         return res.json(data);
       }
     } catch (e) {
-      console.warn("FastAPI backend health check failed, falling back to mock:", e);
+      console.warn("FastAPI backend health check failed:", e);
     }
     res.json({ status: "ok", catalogSize: CATALOG.length });
   });

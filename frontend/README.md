@@ -1,20 +1,16 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Frontend — Assistente de Curadoria do Catálogo
 
-# Run and deploy your AI Studio app
+Interface React (Vite + Express) do assistente editorial.
 
-This contains everything you need to run your app locally.
+## Execução
 
-View your app in AI Studio: https://ai.studio/apps/56a76bfe-608d-47ae-bff4-d61f823bab2c
+Consulte o [README principal](../README.md) na raiz do repositório para instruções completas de setup com Docker Compose.
 
-## Run Locally
+### Desenvolvimento local
 
-**Prerequisites:**  Node.js
+```bash
+npm install
+npm run dev
+```
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+O servidor sobe em `http://localhost:3000` e faz proxy das requisições para o backend FastAPI (`BACKEND_URL`, padrão `http://localhost:8000`).

@@ -10,10 +10,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from backend.app.config import settings
-from backend.app.database import get_db
+from backend.app.database import get_db, SessionLocal
 from backend.app.db_init import init_database
 from shared.schemas import AskRequest, AnswerResponse, FeedbackRequest
-from shared.models import Feedback, QueryLog
+from shared.models import Book, Feedback, QueryLog
 from ai.agents.orchestrator import AgentOrchestrator
 
 # Configure structured logging format
@@ -50,6 +50,8 @@ app.add_middleware(
 )
 
 # Global Telemetry/Metrics Store (InMemory for GET /metrics)
+ASK_ENDPOINTS = ("/api/ask", "/ask", "/api/ask/stream", "/ask/stream")
+
 METRICS = {
     "total_requests": 0,
     "successful_requests": 0,
@@ -101,7 +103,7 @@ async def context_and_telemetry_middleware(request: Request, call_next):
         )
         
         # Update telemetry
-        if request.url.path in ("/api/ask", "/ask") and request.method == "POST":
+        if request.url.path in ASK_ENDPOINTS and request.method == "POST":
             METRICS["total_requests"] += 1
             METRICS["total_latency_ms"] += duration_ms
             if response.status_code == 200:
@@ -114,7 +116,7 @@ async def context_and_telemetry_middleware(request: Request, call_next):
         duration_ms = (time.time() - start_time) * 1000
         logger.error(f"Request failed: {e} - Duration: {duration_ms:.2f}ms", exc_info=True, extra=context_extra)
         
-        if request.url.path in ("/api/ask", "/ask") and request.method == "POST":
+        if request.url.path in ASK_ENDPOINTS and request.method == "POST":
             METRICS["total_requests"] += 1
             METRICS["failed_requests"] += 1
             METRICS["total_latency_ms"] += duration_ms
@@ -137,6 +139,21 @@ def startup_event():
     try:
         init_database()
         logger.info("Database initialized successfully during startup.", extra={"request_id": "startup", "correlation_id": "startup"})
+
+        db = SessionLocal()
+        try:
+            catalog_size = db.query(Book).count()
+        finally:
+            db.close()
+
+        if catalog_size == 0:
+            logger.info("Catalog is empty. Running automatic book ingestion...", extra={"request_id": "startup", "correlation_id": "startup"})
+            import asyncio
+            from ai.ingest.ingest_books import ingest_catalog
+            asyncio.run(ingest_catalog())
+            logger.info("Automatic book ingestion completed.", extra={"request_id": "startup", "correlation_id": "startup"})
+        else:
+            logger.info(f"Catalog already populated with {catalog_size} books.", extra={"request_id": "startup", "correlation_id": "startup"})
     except Exception as e:
         logger.critical(f"Database initialization failed: {e}", extra={"request_id": "startup", "correlation_id": "startup"})
 

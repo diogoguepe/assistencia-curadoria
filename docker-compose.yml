@@ -44,7 +44,6 @@ services:
     environment:
       BACKEND_URL: http://backend:8000
       NODE_ENV: production
-      GEMINI_API_KEY: ${OPENROUTER_API_KEY}  # Fallback option if local mock runs
     depends_on:
       - backend
 

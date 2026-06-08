@@ -77,7 +77,7 @@ Para a demonstração ao vivo, execute estas 3 perguntas em sequência para cobr
 ### ❓ Perguntas dos Product Owners (Negócio/Produto)
 
 *   **P: E se o usuário fizer uma pergunta muito vaga, como 'qual o melhor romance'? Como o produto se comporta?**
-    *   *R*: "O IntentAgent classificará como `RECOMMENDATION`. O sistema recuperará os romances do catálogo. O Reranker reduzirá para os top 5 e o GenerationAgent estruturará ganchos explicando o motivo de cada romance se destacar (por exemplo, por ser sucesso no BookTok). Se a busca retornar resultados fracos, ativamos um fallback que sugere os destaques gerais do catálogo físico da editora."
+    *   *R*: "O IntentAgent classificará como `RECOMMENDATION`. O sistema recuperará os romances do catálogo. O Reranker reduzirá para os top 5 e o GenerationAgent estruturará ganchos explicando o motivo de cada romance se destacar (por exemplo, por ser sucesso no BookTok). Se a busca retornar resultados fracos, o módulo de busca híbrida aplica fallbacks (ILIKE e, em último caso, retorno amplo do catálogo) antes do rerank."
 *   **P: O que você priorizou e o que deixou de fora por causa do tempo?**
     *   *R*: "Priorizei a robustez do pipeline de recuperação híbrida (FTS + pgvector) com RRF e a validação factual de não alucinação, pois sem precisão o produto perde a utilidade para o time editorial. Deixei de fora autenticação e histórico multi-turno (chat de conversa), pois o MVP foca no fluxo de curadoria direta pontual de forma estável."
 
@@ -86,4 +86,4 @@ Para a demonstração ao vivo, execute estas 3 perguntas em sequência para cobr
 *   **P: Por que usar HNSW em vez de IVFFlat na tabela do pgvector?**
     *   *R*: "O IVFFlat requer treinamento prévio e recalibração à medida que novos livros são adicionados ao banco, sofrendo perda de precisão se a lista crescer organicamente sem recriação do índice. O HNSW constrói uma estrutura de grafos dinâmica durante inserções (`INSERT`), fornecendo buscas rápidas de vizinhos com excelente relação de recall sem custos operacionais de retreinamento periódico."
 *   **P: O que acontece se a API do OpenRouter falhar ou ficar offline?**
-    *   *R*: "Implementamos tolerância a falhas na API e no frontend. Se o FastAPI ou o OpenRouter retornar timeout ou erro, o frontend Express detecta a falha e entra em modo de resiliência, entregando uma curadoria local estática representativa com base nas palavras-chave correspondentes. Isso garante que a interface gráfica nunca quebre."
+    *   *R*: "O backend retorna erro HTTP e o frontend exibe mensagem de indisponibilidade. Não há resposta simulada: a curadoria depende do pipeline completo com LLM. O timeout foi configurado em 120 segundos para acomodar a latência do pipeline multiagente."

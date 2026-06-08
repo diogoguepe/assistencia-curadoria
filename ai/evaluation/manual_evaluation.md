@@ -21,7 +21,7 @@ A tabela abaixo classifica o comportamento esperado da resposta gerada pelo RAG 
 | 9 | **Quais são os livros sobre marketing, vendas ou negócios em geral?** | `RECOMMENDATION` | **Correta** | O sistema localiza ganchos promocionais de negócios nos livros `8`, `9` e `15`, sugerindo ganchos comerciais de venda ativa. |
 | 10 | **Indique um livro de ficção científica espacial indicado para pré-adolescentes de 8 a 12 anos** | `FILTER` | **Correta** | Filtra e re-ranqueia "Diário Secreto de um Astronauta" de Pedro Santos (ID `16`) com base na idade escolar mapeada. |
 
-*Nota: Durante o desenvolvimento sem chaves de API remotas configuradas na máquina, os testes de embeddings utilizam vetores mockados de similaridade uniforme, mas mantêm 100% da acurácia léxica local baseada em buscas do banco PostgreSQL FTS (GIN Index).*
+*Nota: Sem chave OpenRouter configurada, a ingestão usa embeddings sintéticos, mas a busca léxica (FTS/GIN) permanece funcional. A curadoria completa com agentes LLM exige chave válida.*
 
 ---
 
@@ -34,7 +34,7 @@ Abaixo estão descritos dois modos de falha típicos identificados no sistema de
 *   **Problema no RAG**: A busca vetorial não possui um vetor de consulta representativo, resultando em pontuações de similaridade semântica uniformes e dispersas. O RRF pode trazer livros não relacionados, e o LLM pode responder com ganchos vagos ou inconsistentes.
 *   **Mitigação Implementada**:
     1.  O `IntentAgent` identifica perguntas que não especificam critérios mínimos e as classifica em `RECOMMENDATION` geral.
-    2.  O `RetrievalAgent` detecta se a busca retornou pontuações baixas de fusão e, em caso de inconsistência de candidatos, ativa um fallback de curadoria misto baseado em destaques (seeding dos 4 livros mais populares de gêneros distintos do catálogo).
+    2.  O módulo `hybrid_search` aplica fallbacks em cascata: busca ILIKE por palavras-chave e, se ambos os pipelines retornarem vazio, devolve candidatos do catálogo completo para o reranker filtrar.
 
 ### Modo de Falha 2: Alucinação de Citações e Contradição do Catálogo
 *   **Cenário**: O `GenerationAgent` decide que para responder à pergunta sobre Inteligência Artificial, ele quer citar um livro clássico como *"Eu, Robô"* de Isaac Asimov (que não está no acervo da editora), ou inventa uma obra fictícia sob ID inexistente.

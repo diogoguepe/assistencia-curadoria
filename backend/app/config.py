@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "openai/text-embedding-3-small"
     
     # API Timeout (Seconds)
-    LLM_TIMEOUT: float = 15.0
+    LLM_TIMEOUT: float = 120.0
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"),
