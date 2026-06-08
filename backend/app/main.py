@@ -299,7 +299,7 @@ async def ask_curator_stream(
                     answer_result = event["data"]
                     
                 # Format as Server-Sent Event
-                yield f"data: {json.dumps(event)}\\n\\n"
+                yield f"data: {json.dumps(event)}\n\n"
                 
             # Log to Database after streaming is complete
             if answer_result:
@@ -316,7 +316,7 @@ async def ask_curator_stream(
                 
         except Exception as e:
             logger.error(f"Error in ask_curator_stream: {e}", exc_info=True, extra=context_extra)
-            yield f"event: error\\ndata: {json.dumps({'detail': str(e)})}\\n\\n"
+            yield f"event: error\ndata: {json.dumps({'detail': str(e)})}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 

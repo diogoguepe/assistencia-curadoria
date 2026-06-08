@@ -70,16 +70,26 @@ class ValidationAgent:
                 "title": b.title,
                 "author": b.authors,
                 "genre": b.genres,
+                "targetAudience": b.target_audience,
+                "publicationYear": b.publication_year,
+                "synopsis": b.synopsis,
+                "price": float(b.price) if b.price is not None else 0.0,
+                "pages": b.pages,
                 "isbn": b.isbn,
-                "synopsis": b.synopsis
+                "tags": b.tags,
+                "marketingHooks": b.marketing_hooks
             })
 
         system_instruction = (
             "Você é um Auditor Editorial e Inspetor de Fatos Sênior.\n"
             "Sua tarefa é analisar a resposta gerada por um assistente de IA e validar se ela:\n"
-            "1. Contradiz alguma informação oficial dos livros fornecidos no contexto (como autores, títulos, ISBNs).\n"
+            "1. Contradiz alguma informação oficial dos livros fornecidos no contexto "
+            "(como autores, títulos, ISBNs, ano de publicação, preço, páginas ou público-alvo).\n"
             "2. Inventa fatos ou livros adicionais que não constam no contexto.\n"
             "3. Contém contradições lógicas absurdas sobre as obras.\n\n"
+            "Use exclusivamente os metadados oficiais do catálogo fornecido. "
+            "Se a resposta citar publicationYear, preço ou outros campos que coincidam com o contexto, "
+            "considere a informação válida.\n\n"
             "Responda estritamente no formato JSON abaixo:\n"
             "{\n"
             "  \"success\": true ou false,\n"
