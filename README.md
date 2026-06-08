@@ -213,7 +213,22 @@ curl -X POST http://localhost:8000/api/ask \
 
 ---
 
-## 8. Módulo de Avaliação (Auditoria Offline)
+## 8. Testes Automatizados
+
+```bash
+# Unitários do backend (API)
+pytest
+
+# Unitários do frontend
+cd frontend && npx vitest run
+
+# E2E do ciclo de feedback (requer Docker Compose em execução)
+python tests/e2e/feedback_cycle.py
+```
+
+---
+
+## 9. Módulo de Avaliação (Auditoria Offline)
 
 O módulo em `ai/evaluation` permite medir de forma científica a acurácia da curadoria RAG.
 
