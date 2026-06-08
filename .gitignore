@@ -1,0 +1,191 @@
+# =========================
+
+# ENVIRONMENT VARIABLES
+
+# =========================
+
+.env
+.env.*
+*.env
+.agents
+
+# Permite exemplos
+
+!.env.example
+!.env.template
+
+# =========================
+
+# NODE.JS
+
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build
+
+dist/
+build/
+.next/
+out/
+coverage/
+
+# =========================
+
+# PYTHON
+
+# =========================
+
+**pycache**/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# Pytest
+
+.pytest_cache/
+
+# Mypy
+
+.mypy_cache/
+
+# Ruff
+
+.ruff_cache/
+
+# =========================
+
+# FASTAPI / FLASK
+
+# =========================
+
+instance/
+.webassets-cache
+
+# =========================
+
+# DATABASES
+
+# =========================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+
+# LOGS
+
+# =========================
+
+logs/
+*.log
+
+# =========================
+
+# IDEs
+
+# =========================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+
+# MACOS
+
+# =========================
+
+.DS_Store
+
+# =========================
+
+# WINDOWS
+
+# =========================
+
+Thumbs.db
+Desktop.ini
+
+# =========================
+
+# TEMP FILES
+
+# =========================
+
+tmp/
+temp/
+.cache/
+
+# =========================
+
+# AI / LANGCHAIN / VECTOR DB
+
+# =========================
+
+.chroma/
+faiss_index/
+vectorstore/
+storage/
+index_storage/
+
+# =========================
+
+# N8N
+
+# =========================
+
+.n8n/
+
+# =========================
+
+# DOCKER
+
+# =========================
+
+.docker/
+
+# =========================
+
+# SECRETS
+
+# =========================
+
+secrets/
+credentials/
+service-account*.json
+firebase-admin*.json
+google-credentials*.json
+*.pem
+*.key
+*.crt
+
+# =========================
+
+# UPLOADS
+
+# =========================
+
+uploads/
+media/
+generated/
+
+# =========================
+
+# TEST OUTPUT
+
+# =========================
+
+htmlcov/
+coverage.xml

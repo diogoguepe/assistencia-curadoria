@@ -1,0 +1,6 @@
+{
+  "name": "Assistente de Curadoria do Catálogo",
+  "description": "Assistente inteligente baseado em IA para responder perguntas, fazer buscas avançadas e realizar curadoria no catálogo de livros da editora.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

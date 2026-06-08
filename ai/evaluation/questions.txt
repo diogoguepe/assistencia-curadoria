@@ -1,0 +1,10 @@
+Quais são as obras de Inteligência Artificial no catálogo?;1,2,11
+Indique livros infantis de ficção ou ecológicos recentes;3,4,10,16
+Quais romances contemporâneos ambientados no Brasil ou na Europa?;5,6,7,13
+Qual a diferença de preço e páginas entre O Algoritmo da Emoção e Machine Learning Prático?;1,2
+Como fazer um bolo de cenoura com cobertura de chocolate?;
+Quem escreveu o livro O Segredo da Quinta da Colina?;13
+Quais livros foram escritos por Luiza Vasconcellos ou Vanessa Dias?;12,18
+Vocês têm algum livro de receitas prático de gastronomia no catálogo?;20
+Quais são os livros sobre marketing, vendas ou negócios em geral?;8,9,15
+Indique um livro de ficção científica espacial indicado para pré-adolescentes de 8 a 12 anos?;16
