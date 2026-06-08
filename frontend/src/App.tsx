@@ -117,38 +117,50 @@ export default function App() {
 
       if (reader) {
         let buffer = "";
+
+        const processSSEChunk = (chunk: string) => {
+          if (!chunk.startsWith("data: ")) return;
+          try {
+            const event = JSON.parse(chunk.slice(6));
+
+            if (event.type === "step") {
+              currentPipeline = [...currentPipeline, event.data];
+              setAnswerResponse(prev => prev ? { ...prev, pipeline: currentPipeline } : null);
+            } else if (event.type === "result") {
+              setAnswerResponse(prev => prev ? {
+                ...prev,
+                answer: event.data.answer,
+                references: event.data.references,
+                responseTimeMs: event.data.responseTimeMs,
+                booksCount: event.data.booksCount
+              } : null);
+              setIsLoading(false);
+            }
+          } catch (e) {
+            console.error("Error parsing SSE JSON", e);
+          }
+        };
+
+        const flushBuffer = () => {
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          for (const part of parts) {
+            processSSEChunk(part.trim());
+          }
+        };
+
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
-          
-          buffer += decoder.decode(value, { stream: true });
-          const parts = buffer.split("\\n\\n");
-          
-          buffer = parts.pop() || "";
-          
-          for (const part of parts) {
-            if (part.startsWith("data: ")) {
-              const dataStr = part.slice(6);
-              try {
-                const event = JSON.parse(dataStr);
-                
-                if (event.type === "step") {
-                  currentPipeline = [...currentPipeline, event.data];
-                  setAnswerResponse(prev => prev ? { ...prev, pipeline: currentPipeline } : null);
-                } else if (event.type === "result") {
-                  setAnswerResponse(prev => prev ? {
-                    ...prev,
-                    answer: event.data.answer,
-                    references: event.data.references,
-                    responseTimeMs: event.data.responseTimeMs,
-                    booksCount: event.data.booksCount
-                  } : null);
-                  setIsLoading(false); // Stream finished, show answer box
-                }
-              } catch (e) {
-                console.error("Error parsing SSE JSON", e);
-              }
+          if (value) {
+            buffer += decoder.decode(value, { stream: true });
+          }
+          flushBuffer();
+          if (done) {
+            if (buffer.trim()) {
+              processSSEChunk(buffer.trim());
+              buffer = "";
             }
+            break;
           }
         }
       }
